@@ -1,17 +1,55 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
-    <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-        </Console>
-        <File name="MyFile" fileName="all.log" immediateFlush="false" append="false">
-            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>
-    </Appenders>
-    <Loggers>
-        <Root level="debug">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="MyFile"/>
-        </Root>
-    </Loggers>
-</Configuration>
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.AppenderRef;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+
+import java.io.Serializable;
+
+public class Log4j2DynamicFileAppender {
+
+    public static void main(String[] args) {
+        // Obtener el LoggerContext actual
+        org.apache.logging.log4j.core.LoggerContext ctx =
+                (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+
+        // Crear un nuevo appender de tipo File
+        Appender appender = createFileAppender(config, "dynamicAppender", "dynamicLogFile.log");
+
+        // Agregar el appender al LoggerContext
+        config.addAppender(appender);
+
+        // Crear una referencia al appender recién creado
+        AppenderRef appenderRef = AppenderRef.createAppenderRef("dynamicAppender", null, null);
+        
+        // Configurar el Logger con el nuevo appender
+        LoggerConfig loggerConfig = LoggerConfig.createLogger(false, org.apache.logging.log4j.Level.INFO,
+                "com.example", "true", new AppenderRef[]{appenderRef}, null, config, (Filter)null);
+
+        loggerConfig.addAppender(appender, null, null);
+        config.addLogger("com.example", loggerConfig);
+
+        // Actualizar la configuración del LoggerContext
+        ctx.updateLoggers();
+
+        // Ahora puedes utilizar el logger normalmente
+        Logger logger = LogManager.getLogger(Log4j2DynamicFileAppender.class);
+        logger.info("Mensaje de ejemplo");
+    }
+
+    private static Appender createFileAppender(Configuration config, String name, String fileName) {
+        Layout<? extends Serializable> layout = config.getLayout();
+        
+        return FileAppender.newBuilder()
+                .setName(name)
+                .setLayout(layout)
+                .withFileName(fileName)
+                .withAppend(true)
+                .build();
+    }
+}
