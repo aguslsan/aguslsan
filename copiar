@@ -42,14 +42,17 @@ public class Log4j2DynamicFileAppender {
         logger.info("Mensaje de ejemplo");
     }
 
-    private static Appender createFileAppender(Configuration config, String name, String fileName) {
-        Layout<? extends Serializable> layout = config.getLayout();
-        
-        return FileAppender.newBuilder()
-                .setName(name)
-                .setLayout(layout)
-                .withFileName(fileName)
-                .withAppend(true)
-                .build();
-    }
+private static Appender createFileAppender(Configuration config, String name, String absoluteFilePath) {
+    Layout<? extends Serializable> layout = PatternLayout.newBuilder()
+            .withPattern("%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n")
+            .withConfiguration(config)
+            .build();
+
+    return FileAppender.newBuilder()
+            .setName(name)
+            .setLayout(layout)
+            .withFileName(absoluteFilePath)
+            .withAppend(true)
+            .build();
+}
 }
