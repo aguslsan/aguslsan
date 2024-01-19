@@ -1,58 +1,14 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.Appender;
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.Layout;
-import org.apache.logging.log4j.core.appender.FileAppender;
-import org.apache.logging.log4j.core.config.AppenderRef;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
+if (arg[0].equals("log") ) {
+  org.apache.logging.log4j.Logger logger
+    = org.apache.logging.log4j.LogManager.getLogger("loggerNameFromXMLConfig");
+  org.apache.logging.log4j.core.Logger coreLogger
+    = (org.apache.logging.log4j.core.Logger)logger;
+  org.apache.logging.log4j.core.LoggerContext context
+    = (org.apache.logging.log4j.core.LoggerContext)coreLogger.getContext();
+  org.apache.logging.log4j.core.config.BaseConfiguration configuration
+    = (org.apache.logging.log4j.core.config.BaseConfiguration)context.getConfiguration();
 
-import java.io.Serializable;
-
-public class Log4j2DynamicFileAppender {
-
-    public static void main(String[] args) {
-        // Obtener el LoggerContext actual
-        org.apache.logging.log4j.core.LoggerContext ctx =
-                (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
-        Configuration config = ctx.getConfiguration();
-
-        // Crear un nuevo appender de tipo File
-        Appender appender = createFileAppender(config, "dynamicAppender", "dynamicLogFile.log");
-
-        // Agregar el appender al LoggerContext
-        config.addAppender(appender);
-
-        // Crear una referencia al appender recién creado
-        AppenderRef appenderRef = AppenderRef.createAppenderRef("dynamicAppender", null, null);
-        
-        // Configurar el Logger con el nuevo appender
-        LoggerConfig loggerConfig = LoggerConfig.createLogger(false, org.apache.logging.log4j.Level.INFO,
-                "com.example", "true", new AppenderRef[]{appenderRef}, null, config, (Filter)null);
-
-        loggerConfig.addAppender(appender, null, null);
-        config.addLogger("com.example", loggerConfig);
-
-        // Actualizar la configuración del LoggerContext
-        ctx.updateLoggers();
-
-        // Ahora puedes utilizar el logger normalmente
-        Logger logger = LogManager.getLogger(Log4j2DynamicFileAppender.class);
-        logger.info("Mensaje de ejemplo");
-    }
-
-private static Appender createFileAppender(Configuration config, String name, String absoluteFilePath) {
-    Layout<? extends Serializable> layout = PatternLayout.newBuilder()
-            .withPattern("%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n")
-            .withConfiguration(config)
-            .build();
-
-    return FileAppender.newBuilder()
-            .setName(name)
-            .setLayout(layout)
-            .withFileName(absoluteFilePath)
-            .withAppend(true)
-            .build();
-}
+  coreLogger.addAppender(configuration.getAppender("appenderNameFromXMLConfig"));
+} else {
+  //...
 }
