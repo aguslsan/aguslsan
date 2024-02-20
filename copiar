@@ -1,10 +1,3 @@
- private void addAppender(Logger logger) {
-     final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-     final Configuration config = ctx.getConfiguration();
-     Layout layout = PatternLayout.createLayout(PatternLayout.SIMPLE_CONVERSION_PATTERN, config, null,
-        null,null, null);
-     Appender appender = FileAppender.createAppender("target/test.log", "false", "false", "File", "true",
-        "false", "false", "4000", layout, null, "false", null, config);
-     appender.start();
-     config.addLoggerAppender(logger, appender);
-}
+cadena="2024_LATAM_LIL_tdltm_LIL_GBS_PROJECT_SETUP_context_GBS.properties_202402201103"
+parte_dinamica=$(echo "$cadena" | grep -o '_[^_]*_' | sed 's/_//g')
+echo "$parte_dinamica"
