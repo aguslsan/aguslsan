@@ -1,3 +1,8 @@
-cadena="2024_LATAM_LIL_tdltm_LIL_GBS_PROJECT_SETUP_context_GBS.properties_202402201103"
-parte_dinamica=$(echo "$cadena" | grep -o '_[^_]*_' | sed 's/_//g')
-echo "$parte_dinamica"
+directory="/path/to/your/directory"
+
+# Check if there's a directory created in the last 30 seconds
+if [ -n "$(find $directory -maxdepth 1 -type d -mmin -0.5)" ]; then
+    echo "A directory was created in the last 30 seconds."
+else
+    echo "No directory was created in the last 30 seconds."
+fi
