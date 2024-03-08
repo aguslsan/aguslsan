@@ -6,3 +6,4 @@ if [ -n "$(find $directory -maxdepth 1 -type d -mmin -0.5)" ]; then
 else
     echo "No directory was created in the last 30 seconds."
 fi
+
