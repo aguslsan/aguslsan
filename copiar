@@ -1,10 +1,19 @@
-directory="/path/to/your/directory"
+  tasks:
+    - name: Simulate a task
+      ansible.builtin.command:
+        cmd: /bin/false
+      register: result
+      ignore_errors: yes
 
-# Check if there's a directory created in the last 30 seconds
-if [ -n "$(find $directory -maxdepth 1 -type d -mmin -0.5)" ]; then
-    echo "A directory was created in the last 30 seconds."
-else
-    echo "No directory was created in the last 30 seconds."
-fi
-
-asdasd
+    - name: Send failure notification email
+      ansible.builtin.mail:
+        host: "smtp.example.com"
+        port: 587
+        username: "your_username"
+        password: "your_password"
+        from: "sender@example.com"
+        to: "recipient@example.com"
+        subject: "Task Failed"
+        body: "The task failed with the following result: {{ result }}"
+        secure: starttls
+      when: result.failed
