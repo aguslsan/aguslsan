@@ -1,19 +1,13 @@
-  tasks:
-    - name: Simulate a task
-      ansible.builtin.command:
-        cmd: /bin/false
-      register: result
-      ignore_errors: yes
+sort archivo1.txt -o archivo1_ordenado.txt
+sort archivo2.txt -o archivo2_ordenado.txt
 
-    - name: Send failure notification email
-      ansible.builtin.mail:
-        host: "smtp.example.com"
-        port: 587
-        username: "your_username"
-        password: "your_password"
-        from: "sender@example.com"
-        to: "recipient@example.com"
-        subject: "Task Failed"
-        body: "The task failed with the following result: {{ result }}"
-        secure: starttls
-      when: result.failed
+diff archivo1_ordenado.txt archivo2_ordenado.txt
+
+diff <(sort archivo1.txt) <(sort archivo2.txt)
+
+Get-Content archivo1.txt | Sort-Object | Set-Content archivo1_ordenado.txt
+Get-Content archivo2.txt | Sort-Object | Set-Content archivo2_ordenado.txt
+
+Compare-Object (Get-Content archivo1_ordenado.txt) (Get-Content archivo2_ordenado.txt)
+
+Compare-Object (Get-Content archivo1.txt | Sort-Object) (Get-Content archivo2.txt | Sort-Object)
