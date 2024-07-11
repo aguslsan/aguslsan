@@ -1,10 +1,9 @@
-# Archivo de entrada
-archivo="datos.txt"
+statusCode='{"statusCode":409'
 
-# Leer línea por línea del archivo
-while IFS='|' read -r campo1 campo2 campo3 || [[ -n "$campo1" ]]; do
-    # Mostrar o procesar cada campo según sea necesario
-    echo "Campo 1: $campo1"
-    echo "Campo 2: $campo2"
-    echo "Campo 3: $campo3"
-done < "$archivo"
+# Utilizar expresión regular para verificar si statusCode empieza con "4"
+if [[ $statusCode =~ ^{\"statusCode\":4[0-9][0-9] ]]; then
+    echo "El statusCode comienza con 4xx"
+    # Realiza aquí las acciones que deseas ejecutar si el statusCode comienza con 4xx
+else
+    echo "El statusCode no comienza con 4xx"
+fi
