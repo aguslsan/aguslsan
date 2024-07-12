@@ -1,24 +1,17 @@
+#!/bin/bash
+
 validate_string() {
   local str="$1"
 
-  # Check if string is empty or longer than 32 characters
-  if [ -z "$str" ] || [ "${#str}" -gt 32 ]; then
-    echo "Invalid: String must be between 1 and 32 characters."
+  if [[ ${#str} -lt 1 || ${#str} -gt 32 || "$str" == -* || "$str" == *- || ! "$str" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+    echo "Inválido: La cadena debe tener entre 1 y 32 caracteres, no debe comenzar ni terminar con un guion, y debe contener solo caracteres alfanuméricos en minúscula y guiones simples."
     return 1
+  else
+    echo "Cadena válida"
+    return 0
   fi
-
-  # Check if string starts or ends with a hyphen
-  if [[ "$str" == -* || "$str" == *- ]]; then
-    echo "Invalid: String must not start or end with a hyphen."
-    return 1
-  fi
-
-  # Check if string contains only lowercase alphanumeric characters and single hyphens
-  if ! [[ "$str" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-    echo "Invalid: String must contain only lowercase alphanumeric characters and single hyphens."
-    return 1
-  fi
-
-  echo "Valid string"
-  return 0
 }
+
+# Uso de ejemplo
+input_string="$1"
+validate_string "$input_string"
