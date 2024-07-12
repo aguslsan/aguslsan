@@ -1,9 +1,24 @@
-statusCode='{"statusCode":409'
+validate_string() {
+  local str="$1"
 
-# Utilizar expresión regular para verificar si statusCode empieza con "4"
-if [[ $statusCode =~ ^{\"statusCode\":4[0-9][0-9] ]]; then
-    echo "El statusCode comienza con 4xx"
-    # Realiza aquí las acciones que deseas ejecutar si el statusCode comienza con 4xx
-else
-    echo "El statusCode no comienza con 4xx"
-fi
+  # Check if string is empty or longer than 32 characters
+  if [ -z "$str" ] || [ "${#str}" -gt 32 ]; then
+    echo "Invalid: String must be between 1 and 32 characters."
+    return 1
+  fi
+
+  # Check if string starts or ends with a hyphen
+  if [[ "$str" == -* || "$str" == *- ]]; then
+    echo "Invalid: String must not start or end with a hyphen."
+    return 1
+  fi
+
+  # Check if string contains only lowercase alphanumeric characters and single hyphens
+  if ! [[ "$str" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+    echo "Invalid: String must contain only lowercase alphanumeric characters and single hyphens."
+    return 1
+  fi
+
+  echo "Valid string"
+  return 0
+}
