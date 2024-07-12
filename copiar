@@ -1,17 +1,7 @@
-#!/bin/bash
+    - name: Ejecutar comando
+      command: uname -a
+      register: resultado_comando
 
-validate_string() {
-  local str="$1"
-
-  if [[ ${#str} -lt 1 || ${#str} -gt 32 || "$str" == -* || "$str" == *- || ! "$str" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-    echo "Inválido: La cadena debe tener entre 1 y 32 caracteres, no debe comenzar ni terminar con un guion, y debe contener solo caracteres alfanuméricos en minúscula y guiones simples."
-    return 1
-  else
-    echo "Cadena válida"
-    return 0
-  fi
-}
-
-# Uso de ejemplo
-input_string="$1"
-validate_string "$input_string"
+    - name: Mostrar salida del comando
+      debug:
+        var: resultado_comando.stdout
