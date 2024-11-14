@@ -1,7 +1,17 @@
-    - name: Ejecutar comando
-      command: uname -a
-      register: resultado_comando
+from xsdata.formats.dataclass.parsers import XmlParser
+from generated_module import RootClass  # Replace with your root class
 
-    - name: Mostrar salida del comando
-      debug:
-        var: resultado_comando.stdout
+parser = XmlParser()
+with open("path/to/your.xml", "r") as xml_file:
+    obj = parser.from_string(xml_file.read(), RootClass)
+
+import xmlschema
+
+schema = xmlschema.XMLSchema("path/to/schema.xsd")
+is_valid = schema.is_valid("path/to/your.xml")
+
+if is_valid:
+    print("XML is valid according to the schema.")
+else:
+    print("XML is invalid.")
+    print(schema.validate("path/to/your.xml"))
